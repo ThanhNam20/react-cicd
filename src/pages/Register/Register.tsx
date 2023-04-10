@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Input from 'src/components/Input'
 import { AuthenticationSchema, getRules, schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -8,7 +8,10 @@ import { useMutation } from '@tanstack/react-query'
 import { registerAccount } from 'src/services/auth.api'
 import { omit } from 'lodash'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
-import { ResponseApi } from 'src/types/utils.type'
+import { ErrorResponse } from 'src/types/utils.type'
+import { AppContext } from 'src/contexts/app.context'
+import Button from 'src/components/Button'
+import path from 'src/contants/path'
 
 interface Register {
   email: string
@@ -17,6 +20,8 @@ interface Register {
 }
 
 const Register = () => {
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -26,9 +31,7 @@ const Register = () => {
   } = useForm<AuthenticationSchema>({
     resolver: yupResolver(schema)
   })
-
   // const rules = getRules(getValues)
-
   const registerAccountMutation = useMutation({
     mutationFn: (body: Omit<AuthenticationSchema, 'confirm_password'>) => registerAccount(body)
   })
@@ -37,10 +40,12 @@ const Register = () => {
     const registerBody = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(registerBody, {
       onSuccess(data) {
-        console.log(data)
+        setIsAuthenticated(true)
+        setProfile(data.data.data.user)
+        navigate('/')
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<ResponseApi<Omit<Register, 'confirm_password'>>>(error)) {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<Register, 'confirm_password'>>>(error)) {
           const formError = error.response?.data.data
 
           if (formError) {
@@ -89,17 +94,19 @@ const Register = () => {
                 autoComplete='on'
               />
               <div className='mt-3'>
-                <button
+                <Button
+                  isLoading={registerAccountMutation.isLoading}
+                  disabled={registerAccountMutation.isLoading}
                   type='submit'
-                  className='hover:bg-text-600 w-full cursor-pointer bg-red-500 px-2 py-4 text-center uppercase text-white '
+                  className=' hover:bg-text-600 flex w-full cursor-pointer items-center justify-center bg-red-500 px-2 py-4 text-center uppercase text-white'
                 >
                   Đăng ký
-                </button>
+                </Button>
               </div>
               <div className='mt-8'>
                 <div className=' flex items-center justify-center text-center text-orange'>
                   <span className='text-slate-400'>Bạn đã có tài khoản?</span>
-                  <Link to='/login'>Đăng nhập</Link>
+                  <Link to={path.login}>Đăng nhập</Link>
                 </div>
               </div>
             </form>
