@@ -21,7 +21,7 @@ export default function Input({
   ...rest
 }: Props) {
   //Check xem có validate khum
-  const registerResult = register && name ? register(name, rules) : null;
+  const registerResult = register && name ? register(name, rules) : null
 
   return (
     <div className={className}>

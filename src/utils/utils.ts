@@ -10,7 +10,7 @@ export function isAxiosUnprocessableEntityError<FormError>(error: unknown): erro
 }
 
 export function formatCurrency(current: number) {
-  return new Intl.NumberFormat('de-DE').format(current);
+  return new Intl.NumberFormat('de-DE').format(current)
 }
 export function formatNumberToSocialStyle(value: number) {
   return new Intl.NumberFormat('en', {

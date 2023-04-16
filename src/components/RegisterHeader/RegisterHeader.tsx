@@ -5,7 +5,7 @@ import path from 'src/contants/path'
 const RegisterHeader = () => {
   const useRegisterMatch = useMatch(path.register)
   const isRegisterMatch = Boolean(useRegisterMatch)
-  
+
   return (
     <header className='py-5'>
       <div className='container'>

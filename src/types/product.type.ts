@@ -29,7 +29,7 @@ export interface ProductList {
 export interface ProductListConfig {
   page?: number
   limit?: number
-  sort_by?: 'createdAt'|' view' | 'sold' | 'price'
+  sort_by?: 'createdAt' | ' view' | 'sold' | 'price'
   order?: 'asc' | 'desc'
   exclude?: string
   rating_filters?: number

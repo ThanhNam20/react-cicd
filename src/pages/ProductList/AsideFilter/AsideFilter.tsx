@@ -133,7 +133,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                     placeholder='₫ TỪ'
                     classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
                     classNameError='hidden'
-                    onChange={event => {
+                    onChange={(event) => {
                       field.onChange(event)
                       trigger('price_max')
                     }}
@@ -158,7 +158,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                     placeholder='₫ ĐẾN'
                     classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
                     classNameError='hidden'
-                    onChange={event => {
+                    onChange={(event) => {
                       field.onChange(event)
                       trigger('price_min')
                     }}
