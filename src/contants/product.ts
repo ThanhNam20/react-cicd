@@ -3,7 +3,7 @@ export const sort_by = {
   view: 'view',
   sold: 'sold',
   price: 'price'
-} as const
+}
 
 export const order = {
   asc: 'asc',
