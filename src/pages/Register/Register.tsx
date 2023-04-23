@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import Input from 'src/components/Input'
-import { AuthenticationSchema, getRules, schema } from 'src/utils/rules'
+import { AuthenticationSchema, RegisterSchema, getRules, registerSchema, schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { registerAccount } from 'src/services/auth.api'
@@ -28,8 +28,8 @@ const Register = () => {
     formState: { errors },
     getValues,
     setError
-  } = useForm<AuthenticationSchema>({
-    resolver: yupResolver(schema)
+  } = useForm<RegisterSchema>({
+    resolver: yupResolver(registerSchema)
   })
   // const rules = getRules(getValues)
   const registerAccountMutation = useMutation({

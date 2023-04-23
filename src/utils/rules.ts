@@ -68,10 +68,12 @@ export const schema = yup
   .required()
 
 // Loại bỏ các trường không dùng đến trong schema
-const loginSchema = schema.omit(['confirm_password'])
+export const loginSchema = schema.pick(['email', 'password'])
+export const registerSchema = schema.pick(['email', 'password', 'confirm_password'])
 export const priceSchema = schema.pick(['price_min', 'price_max'])
 
 //Export type cho từng schema nhỏ
 export type LoginSchema = yup.InferType<typeof loginSchema>
+export type RegisterSchema = yup.InferType<typeof registerSchema>
 export type AuthenticationSchema = yup.InferType<typeof schema>
 export type PriceSchema = yup.InferType<typeof priceSchema>

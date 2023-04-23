@@ -1,14 +1,13 @@
+import { yupResolver } from '@hookform/resolvers/yup'
+import classNames from 'classnames'
+import { Controller, useForm } from 'react-hook-form'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button'
-import Input from 'src/components/Input'
-import path from 'src/contants/path'
-import { Category } from 'src/types/category.type'
-import { QueryConfig } from '../ProductList'
-import classNames from 'classnames'
 import InputNumber from 'src/components/InputNumber'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { schema, priceSchema } from 'src/utils/rules'
+import path from 'src/contants/path'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
+import { Category } from 'src/types/category.type'
+import { priceSchema } from 'src/utils/rules'
 
 export type Props = {
   categories: Category[]

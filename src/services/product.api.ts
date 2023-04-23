@@ -11,7 +11,7 @@ const productApi = {
     })
   },
   getProductDetail(productId: string) {
-    return http.get<Product>(`${URL}/${productId}`)
+    return http.get<SuccessResponse<Product>>(`${URL}/${productId}`)
   }
 }
 
