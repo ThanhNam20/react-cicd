@@ -9,9 +9,7 @@ const purchaseApi = {
   },
   getPurchases(params: { status: PurchaseListStatus }) {
     return http.get<SuccessResponse<Purchase[]>>(`${URL}`, {
-      params: {
-        params
-      }
+      params
     })
   }
 }

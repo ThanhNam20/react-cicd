@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import InputNumber from 'src/components/InputNumber'
@@ -8,10 +8,13 @@ import DOMPurify from 'dompurify'
 import { ProductListConfig } from 'src/types/product.type'
 import Product from '../ProductList/Product'
 import QuantityController from 'src/components/QuantityController'
+import purchaseApi from 'src/services/purchase.api'
+import { purchaseStatus } from 'src/contants/purchase'
+import { toast } from 'react-toastify'
 
 const ProductDetail = () => {
   const [buyCount, setBuyCount] = useState(1)
-
+  const queryClient = useQueryClient()
   const imageRef = useRef<HTMLImageElement>(null)
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
@@ -30,6 +33,21 @@ const ProductDetail = () => {
     enabled: Boolean(product),
     staleTime: 3 * 60 * 1000
   })
+
+  const addToCartMutation = useMutation(purchaseApi.addToCard)
+
+  const addToCart = () => {
+    addToCartMutation.mutate(
+      { buy_count: buyCount, product_id: product?._id as string },
+      {
+        onSuccess: (response) => {
+          toast.success(response.data.message)
+          queryClient.invalidateQueries({ queryKey: ['purchases', { status: purchaseStatus.inCart }] })
+        }
+      }
+    )
+  }
+
   const [currentIndexImage, setCurrentIndexImage] = useState([0, 5])
   const [activeImage, setActiveImage] = useState('')
   const currentImages = useMemo(
@@ -183,7 +201,10 @@ const ProductDetail = () => {
               </div>
 
               <div className='mt-8 flex items-center'>
-                <button className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-orange/5'>
+                <button
+                  onClick={addToCart}
+                  className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-orange/5'
+                >
                   <svg
                     enableBackground='new 0 0 15 15'
                     viewBox='0 0 15 15'
