@@ -39,7 +39,8 @@ export default function Header() {
         status: purchaseStatus.inCart
       }
     ],
-    queryFn: () => purchaseApi.getPurchases({ status: purchaseStatus.inCart })
+    queryFn: () => purchaseApi.getPurchases({ status: purchaseStatus.inCart }),
+    enabled: isAuthenticated
   })
 
   const purchasesInCart = purchasesInCartData?.data.data
@@ -214,11 +215,15 @@ export default function Header() {
                       </div>
                       <div className='mt-6 flex items-center justify-between'>
                         <div className='text-xs capitalize text-gray-500'>
-                          {purchasesInCart.length > MAX_PURCHASE ? purchasesInCart.length - MAX_PURCHASE : ''} Thêm hàng vào giỏ
+                          {purchasesInCart.length > MAX_PURCHASE ? purchasesInCart.length - MAX_PURCHASE : ''} Thêm hàng
+                          vào giỏ
                         </div>
-                        <button className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-90'>
+                        <Link
+                          to={path.cart}
+                          className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-90'
+                        >
                           Xem giỏ hàng
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   ) : (
