@@ -1,0 +1,1 @@
+import HistoryPurchase from './HistoryPurchase'

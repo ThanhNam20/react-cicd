@@ -8,8 +8,11 @@ import Cart from 'src/pages/Cart'
 import Login from 'src/pages/Login'
 import ProductDetail from 'src/pages/ProductDetail'
 import ProductList from 'src/pages/ProductList'
-import Profile from 'src/pages/Profile'
 import Register from 'src/pages/Register'
+import UserLayout from 'src/pages/User/layouts/UserLayout/UserLayout'
+import ChangePassword from 'src/pages/User/pages/ChangePassword/ChangePassword'
+import HistoryPurchase from 'src/pages/User/pages/HistoryPurchase/HistoryPurchase'
+import Profile from 'src/pages/User/pages/Profile/Profile'
 
 //Những route con trong này sẽ không thể truy cập khi chưa login
 function ProtectedRoute() {
@@ -48,20 +51,34 @@ const useRouteElements = () => {
       element: <ProtectedRoute />,
       children: [
         {
-          path: path.profile,
-          element: (
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          )
-        },
-        {
           path: path.cart,
           element: (
             <MainLayout>
               <Cart />
             </MainLayout>
           )
+        },
+        {
+          path: path.user,
+          element: (
+            <MainLayout>
+              <UserLayout />
+            </MainLayout>
+          ),
+          children: [
+            {
+              path: path.profile,
+              element: <Profile />
+            },
+            {
+              path: path.changePassword,
+              element: <ChangePassword />
+            },
+            {
+              path: path.historyPurchase,
+              element: <HistoryPurchase />
+            }
+          ]
         }
       ]
     },
