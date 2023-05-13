@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { AppProvider } from './contexts/app.context'
+import ErrorBoundary from './components/ErrorBoundary'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,7 +24,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <AppProvider>
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
         </AppProvider>
         <ToastContainer />
         <ReactQueryDevtools initialIsOpen={false} />

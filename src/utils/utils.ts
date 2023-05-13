@@ -32,4 +32,5 @@ export const getIdFromNameId = (nameId: string) => {
   return arr[arr.length - 1]
 }
 
-export const rateSale = (original: number, sale: number) => Math.round(((original - sale) / original) * 100) + '%'
+export const rateSale = (original: number, sale: number) => Math.round(((original - sale) / original) * 100) + '%';
+export const getAvatarUrl = (image_name?: string) => `https://api-ecom.duthanhduoc.com/images/${image_name}`

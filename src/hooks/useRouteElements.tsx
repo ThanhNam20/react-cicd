@@ -1,11 +1,11 @@
-import { useContext } from 'react'
+import { Suspense, lazy, useContext } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import path from 'src/contants/path'
 import { AppContext } from 'src/contexts/app.context'
 import MainLayout from 'src/layouts/MainLayout'
 import RegisterLayout from 'src/layouts/RegisterLayout'
 import Cart from 'src/pages/Cart'
-import Login from 'src/pages/Login'
+import NotFound from 'src/pages/NotFound'
 import ProductDetail from 'src/pages/ProductDetail'
 import ProductList from 'src/pages/ProductList'
 import Register from 'src/pages/Register'
@@ -13,6 +13,8 @@ import UserLayout from 'src/pages/User/layouts/UserLayout/UserLayout'
 import ChangePassword from 'src/pages/User/pages/ChangePassword/ChangePassword'
 import HistoryPurchase from 'src/pages/User/pages/HistoryPurchase/HistoryPurchase'
 import Profile from 'src/pages/User/pages/Profile/Profile'
+
+const Login = lazy(() => import('src/pages/Login'))
 
 //Những route con trong này sẽ không thể truy cập khi chưa login
 function ProtectedRoute() {
@@ -91,7 +93,9 @@ const useRouteElements = () => {
           path: path.login,
           element: (
             <RegisterLayout>
-              <Login />
+              <Suspense>
+                <Login />
+              </Suspense>
             </RegisterLayout>
           )
         },
@@ -104,6 +108,14 @@ const useRouteElements = () => {
           )
         }
       ]
+    },
+    {
+      path: '*',
+      element: (
+        <MainLayout>
+          <NotFound />
+        </MainLayout>
+      )
     }
   ])
   return routeElements

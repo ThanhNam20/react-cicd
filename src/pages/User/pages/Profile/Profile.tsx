@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
@@ -9,19 +9,31 @@ import userApi from 'src/services/user.api'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import DateSelect from '../../components/DateSelect/DateSelect'
 import { toast } from 'react-toastify'
+import { AppContext } from 'src/contexts/app.context'
+import { setProfileFromLS } from 'src/utils/auth'
+import { getAvatarUrl } from 'src/utils/utils'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
-
 const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birth', 'avatar'])
 
+
+
 const Profile = () => {
+  const { setProfile } = useContext(AppContext)
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [file, setFile] = useState<File>()
+  const previewImage = useMemo(() => {
+    return file ? URL.createObjectURL(file) : ''
+  }, [file])
   const {
     register,
     control,
     formState: { errors },
     handleSubmit,
     setValue,
-    setError
+    setError,
+    watch
   } = useForm<FormData>({
     defaultValues: {
       name: '',
@@ -33,7 +45,9 @@ const Profile = () => {
     resolver: yupResolver(profileSchema)
   })
 
-  const { data: profileData } = useQuery({
+  const avatar = watch('avatar')
+
+  const { data: profileData, refetch } = useQuery({
     queryKey: ['profile'],
     queryFn: userApi.getProfile
   })
@@ -42,6 +56,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (profile) {
+      setValue('avatar', profile.avatar)
       setValue('name', profile.name)
       setValue('phone', profile.phone)
       setValue('address', profile.address)
@@ -56,9 +71,42 @@ const Profile = () => {
     }
   })
 
-  const handleUpdateProfile = handleSubmit(async (data) => {
-    await updateProfileMutation.mutateAsync({ ...data, date_of_birth: data.date_of_birth?.toISOString() })
+  const uploadAvatarMutation = useMutation({
+    mutationFn: userApi.uploadAvatar
   })
+
+  const handleUpdateProfile = handleSubmit(async (data) => {
+    try {
+      let avatarName = avatar
+      if (file) {
+        const form = new FormData()
+        form.append('image', file)
+        const uploadAvatar = await uploadAvatarMutation.mutateAsync(form)
+        avatarName = uploadAvatar.data.data
+        setValue('avatar', avatarName)
+
+        const response = await updateProfileMutation.mutateAsync({
+          ...data,
+          date_of_birth: data.date_of_birth?.toISOString(),
+          avatar: avatarName
+        })
+        setProfile(response.data.data)
+        setProfileFromLS(response.data.data)
+        refetch()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileFromLocal = event.target.files?.[0]
+    setFile(fileFromLocal)
+  }
+
+  const handleUpload = () => {
+    fileInputRef.current?.click()
+  }
 
   return (
     <div className='rounded-sm bg-white px-2 pb-10 shadow md:px-7 md:pb-20'>
@@ -141,14 +189,17 @@ const Profile = () => {
         <div className='flex justify-center md:w-72 md:border-l md:border-l-gray-200'>
           <div className='flex flex-col items-center'>
             <div className='my-5 h-24 w-24'>
-              <img
-                src='https://cf.shopee.vn/file/d04ea22afab6e6d250a370d7ccc2e675_tn'
-                alt=''
-                className='w-full w-full rounded-full object-cover'
-              />
+              <img src={previewImage || getAvatarUrl(avatar)} alt='' className='w-full rounded-full object-cover' />
             </div>
-            <input className='hidden' type='file' accept='.jpg,.jpeg,.png' />
+            <input
+              onChange={(event) => onFileChange(event)}
+              ref={fileInputRef}
+              className='hidden'
+              type='file'
+              accept='.jpg,.jpeg,.png'
+            />
             <button
+              onClick={handleUpload}
               type='button'
               className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm'
             >

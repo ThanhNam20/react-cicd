@@ -1,9 +1,10 @@
 import { sort_by as sortBy } from 'src/contants/product'
-import { QueryConfig } from '../ProductList'
+
 import classNames from 'classnames'
 import { ProductListConfig } from 'src/types/product.type'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import path from 'src/contants/path'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
 
 interface Props {
   queryConfig: QueryConfig
