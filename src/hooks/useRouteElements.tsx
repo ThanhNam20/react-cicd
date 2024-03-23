@@ -1,6 +1,8 @@
 import { Suspense, lazy, useContext } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import SEOComponent from 'src/components/SEO'
 import path from 'src/contants/path'
+import { seoContentStaticPage } from 'src/contants/seo'
 import { AppContext } from 'src/contexts/app.context'
 import MainLayout from 'src/layouts/MainLayout'
 import RegisterLayout from 'src/layouts/RegisterLayout'
@@ -34,6 +36,7 @@ const useRouteElements = () => {
       index: true,
       element: (
         <MainLayout>
+          <SEOComponent props={seoContentStaticPage.home} />
           <ProductList />
         </MainLayout>
       )
@@ -94,6 +97,7 @@ const useRouteElements = () => {
           element: (
             <RegisterLayout>
               <Suspense>
+                <SEOComponent props={seoContentStaticPage.login} />
                 <Login />
               </Suspense>
             </RegisterLayout>
@@ -103,6 +107,7 @@ const useRouteElements = () => {
           path: path.register,
           element: (
             <RegisterLayout>
+              <SEOComponent props={seoContentStaticPage.register} />
               <Register />
             </RegisterLayout>
           )
