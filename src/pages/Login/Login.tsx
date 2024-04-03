@@ -88,7 +88,7 @@ const Login = () => {
                   type='submit'
                   className=' hover:bg-text-500 flex w-full cursor-pointer items-center justify-center bg-red-500 px-2 py-4 text-center uppercase text-white'
                 >
-                  Đằng nhập
+                  haha
                 </Button>
               </div>
               <div className='mt-8'>
