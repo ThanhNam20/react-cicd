@@ -28,5 +28,6 @@ jobs:
         cache: 'npm'
     - run: yarn
     - run: npm run build
-    - run: cp -r ./react-cicd/react-cicd/react-cicd/react-cicd/dist/ /var/www/react-cicd/ 
+    - run: mv /home/namthanh/react-cicd/react-cicd/react-cicd/react-cicd/dist /var/www/react-cicd
+
 
